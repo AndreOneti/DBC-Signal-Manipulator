@@ -6,6 +6,15 @@ const SIGNAL_RE =
 const VERSION_RE = /^VERSION\s+"([^"]*)"/;
 const BU_RE = /^BU_\s*:(.*)/;
 
+function decToHex(value: number): number {
+  const mask = 0x1fffffff;
+
+  // Aplica a máscara e converte para hex
+  const idHex = (value & mask).toString(16).toUpperCase();
+
+  return parseInt(idHex, 16);
+}
+
 export function parseDbc(content: string): DbcFile {
   const lines = content.split('\n');
   const messages: DbcMessage[] = [];
@@ -32,7 +41,7 @@ export function parseDbc(content: string): DbcFile {
     const msgMatch = line.match(MESSAGE_RE);
     if (msgMatch) {
       currentMessage = {
-        id: parseInt(msgMatch[1], 10),
+        id: decToHex(parseInt(msgMatch[1], 10)),
         name: msgMatch[2],
         dlc: parseInt(msgMatch[3], 10),
         transmitter: msgMatch[4],
