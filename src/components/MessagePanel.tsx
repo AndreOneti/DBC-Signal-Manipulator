@@ -3,6 +3,7 @@ import { RotateCcw, ArrowUpDown, Zap } from 'lucide-react';
 import type { DbcMessage, SignalState } from '../types/dbc';
 import {
   encodePayload,
+  decodePayload,
   getDefaultState,
   formatCanId,
   getMultiplexValues,
@@ -11,12 +12,13 @@ import {
 } from '../utils/canEncoder';
 import SignalEditor from './SignalEditor';
 import PayloadDisplay from './PayloadDisplay';
+import HexDecoder from './HexDecoder';
 
 interface Props {
   message: DbcMessage;
 }
 
-export default function MessagePanel({ message }: Props) {
+export default function MessagePanel({ message }: Readonly<Props>) {
   const [state, setState] = useState<SignalState>(() =>
     getDefaultState(message),
   );
@@ -50,6 +52,11 @@ export default function MessagePanel({ message }: Props) {
   };
 
   const reset = () => setState(getDefaultState(message));
+
+  const handleDecode = (bytes: Uint8Array) => {
+    const decoded = decodePayload(message, bytes);
+    setState(prev => ({ ...prev, ...decoded }));
+  };
 
   return (
     <div className='flex flex-col flex-1 min-h-0 overflow-hidden'>
@@ -127,8 +134,9 @@ export default function MessagePanel({ message }: Props) {
       )}
 
       {/* Payload display */}
-      <div className='px-6 pt-4 shrink-0'>
+      <div className='px-6 pt-4 shrink-0 space-y-4'>
         <PayloadDisplay message={message} payload={payload} />
+        <HexDecoder dlc={message.dlc} onDecode={handleDecode} />
       </div>
 
       {/* Signals */}

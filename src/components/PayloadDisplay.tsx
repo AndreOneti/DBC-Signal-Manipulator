@@ -8,7 +8,7 @@ interface Props {
   payload: Uint8Array;
 }
 
-export default function PayloadDisplay({ message, payload }: Props) {
+export default function PayloadDisplay({ message, payload }: Readonly<Props>) {
   const [copied, setCopied] = useState(false);
   const hex = toHexString(payload);
 

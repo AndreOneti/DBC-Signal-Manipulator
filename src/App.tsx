@@ -23,7 +23,7 @@ export default function App() {
       setDbcFile(parsed);
       setFilename(name);
       setSelectedMsgId(parsed.messages[0].id);
-    } catch (err) {
+    } catch {
       setParseError('Failed to parse DBC file. Please check the format.');
     }
   }, []);

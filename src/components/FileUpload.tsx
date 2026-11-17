@@ -5,7 +5,7 @@ interface Props {
   onLoad: (content: string, filename: string) => void;
 }
 
-export default function FileUpload({ onLoad }: Props) {
+export default function FileUpload({ onLoad }: Readonly<Props>) {
   const handleFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = e => {
